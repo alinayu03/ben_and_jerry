@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "total_redundant_pairs": 5,
+    "average_similarity": 85.4,
+    "most_redundant_file": "src/utils/helpers.js"
+  },
+  "redundancies": [
+    {
+      "file_a": "src/utils/helpers.js",
+      "file_b": "src/legacy/utils.js",
+      "similarity": 95.2,
+      "code_a": "def calculate_average(arr): return sum(arr) / len(arr)",
+      "code_b": "def find_mean(values): return sum(values) / len(values)"
+    },
+    {
+      "file_a": "src/auth/AuthManager.py",
+      "file_b": "src/legacy/AuthHelper.py",
+      "similarity": 88.7,
+      "code_a": "class AuthManager: def authenticate(user): return user.is_valid()",
+      "code_b": "class AuthHelper: def check_credentials(user): return user.is_valid()"
+    }
+  ]
+}
