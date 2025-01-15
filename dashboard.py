@@ -11,7 +11,9 @@ data = {
                 "coverage_map": [0.9595],
                 "best_coverage": 0.9595,
                 "most_similar_class": "SpinningCatAnimator",
-                "class_similarity_score": 0.9595
+                "class_similarity_score": 0.9595,
+                "snippet": """class RotatingCatAnimator(BaseAnimator):\n    def animate(self):\n        if not self.frame_manager:\n            return\n        cycle = 0\n        while cycle < self.repeat:\n            idx = 0\n            while idx < len(self.frame_manager):\n                self._clear_console()\n                print(Fore.YELLOW + f\"Cycle {cycle+1}/{self.repeat}, \" + Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\\n\")\n                print(Fore.GREEN + str(self.frame_manager.get_frames()[idx]))\n                time.sleep(self.delay)\n                idx += 1\n            cycle += 1\n""",
+                "most_similar_class_code": """class SpinningCatAnimator(BaseAnimator):\n    def animate(self):\n        if len(self.frame_manager) == 0:\n            print(\"No frames to animate.\")\n            return\n        for cycle in range(self.repeat):\n            for idx, frame in enumerate(self.frame_manager.get_frames()):\n                self._clear_console()\n                cycle_str = Fore.YELLOW + f\"Cycle {cycle+1}/{self.repeat}\"\n                frame_str = Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\"\n                print(f\"{cycle_str}, {frame_str}\\n\")\n                print(Fore.GREEN + str(frame))\n                time.sleep(self.delay)\n"""
             }
         },
         {
@@ -21,7 +23,9 @@ data = {
                 "coverage_map": [0.9601],
                 "best_coverage": 0.9601,
                 "most_similar_class": "SpinningCatAnimator",
-                "class_similarity_score": 0.9601
+                "class_similarity_score": 0.9601,
+                "snippet": """class MirroredSpinningCatAnimator(BaseAnimator):\n    def animate(self):\n        if not self.frame_manager:\n            return\n        for cycle in range(self.repeat):\n            frames = self.frame_manager.get_frames()\n            for idx in range(len(frames) * 2):  # Doubles frame count, mirrors the second half\n                self._clear_console()\n                frame = frames[idx % len(frames)]\n                print(Fore.YELLOW + f\"Cycle {cycle+1}/{self.repeat}, \" + Fore.CYAN + f\"Frame {idx+1}/{len(frames)*2}\\n\")\n                print(Fore.GREEN + (\"\\n\".join(line[::-1] for line in str(frame).split(\"\\n\")) if idx >= len(frames) else str(frame)))\n                time.sleep(self.delay)\n""",
+                "most_similar_class_code": """class SpinningCatAnimator(BaseAnimator):\n    def animate(self):\n        if len(self.frame_manager) == 0:\n            print(\"No frames to animate.\")\n            return\n        for cycle in range(self.repeat):\n            for idx, frame in enumerate(self.frame_manager.get_frames()):\n                self._clear_console()\n                cycle_str = Fore.YELLOW + f\"Cycle {cycle+1}/{self.repeat}\"\n                frame_str = Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\"\n                print(f\"{cycle_str}, {frame_str}\\n\")\n                print(Fore.GREEN + str(frame))\n                time.sleep(self.delay)\n"""
             }
         },
         {
@@ -31,7 +35,9 @@ data = {
                 "coverage_map": [0.8084, 0.5272, 0.4831, 0.8643],
                 "best_coverage": 0.8643,
                 "most_similar_class": "ShakySpinningCatAnimator",
-                "class_similarity_score": 0.612
+                "class_similarity_score": 0.612,
+                "snippet": """class RainbowCatAnimator(BaseAnimator):\n    def __init__(self, frame_manager, delay=0.4, repeat=1, clear_screen=True, rainbow_speed=0.3):\n        super().__init__(frame_manager, delay, repeat, clear_screen)\n        self.rainbow_speed = rainbow_speed\n        self.colors = [Fore.RED, Fore.YELLOW, Fore.GREEN, Fore.CYAN, Fore.BLUE, Fore.MAGENTA]\n\n    def _rainbow_text(self, text, frame_idx):\n        color_cycle = self.colors[frame_idx % len(self.colors)]\n        return "\\n".join(color_cycle + line for line in text.split("\\n"))\n\n    def _add_trail(self, text, frame_idx):\n        trail = "." * (frame_idx % 5)\n        return "\\n".join(line + trail for line in text.split("\\n"))\n\n    def animate(self):\n        if not self.frame_manager:\n            return\n        for cycle in range(self.repeat):\n            for idx, frame in enumerate(self.frame_manager.get_frames()):\n                self._clear_console()\n                print(Fore.YELLOW + f\"Rainbow Cycle {cycle+1}/{self.repeat}\")\n                print(Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\\n\")\n                styled_text = self._rainbow_text(str(frame), idx)\n                styled_text = self._add_trail(styled_text, idx)\n                print(styled_text)\n                time.sleep(self.rainbow_speed)\n""",
+                "most_similar_class_code": """class ShakySpinningCatAnimator(BaseAnimator):\n    def __init__(self, frame_manager, delay=0.4, repeat=1, clear_screen=True, amplitude=2):\n        super().__init__(frame_manager, delay, repeat, clear_screen)\n        self.amplitude = amplitude\n\n    def _shake_lines(self, text):\n        lines = text.split("\\n")\n        new_lines = []\n        for ln in lines:\n            offset = random.randint(-self.amplitude, self.amplitude)\n            if offset > 0:\n                new_lines.append(" " * offset + ln)\n            else:\n                new_lines.append(ln)\n        return "\\n".join(new_lines)\n\n    def animate(self):\n        if len(self.frame_manager) == 0:\n            print("No frames to animate.")\n            return\n        for cycle in range(self.repeat):\n            for idx, frame in enumerate(self.frame_manager.get_frames()):\n                self._clear_console()\n                c_str = Fore.YELLOW + f\"Shaky Cycle {cycle+1}/{self.repeat}\"\n                f_str = Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\"\n                print(f"{c_str}, {f_str}\\n")\n                shaken = self._shake_lines(frame.ascii_art)\n                print(Fore.GREEN + shaken)\n                time.sleep(self.delay)\n"""
             }
         },
         {
@@ -103,7 +109,6 @@ st.markdown("""
 """)
 
 # Display results
-# Display results
 for test in data["results"]:
     test_case = test["test_case"]
     result = test["result"]
@@ -119,25 +124,23 @@ for test in data["results"]:
         if "most_similar_class" in result and result["most_similar_class"]:
             st.markdown(f"**Most Similar Class:** `{result['most_similar_class']}`")
 
-        # Display complementary class
-        if "complementary_class" in result and result["complementary_class"]:
-            st.markdown(f"**Complementary Class:** `{result['complementary_class']}`")
-
         # Display best coverage
         if "best_coverage" in result:
             st.markdown(f"**Best Coverage Score:** `{result['best_coverage']}`")
 
+        # Display example snippet
+        if "snippet" in result:
+            st.markdown("### Input Code Snippet")
+            st.code(result["snippet"], language="python")
+
+        # Display most similar class code
+        if "most_similar_class_code" in result:
+            st.markdown("### Most Similar Class Code")
+            st.code(result["most_similar_class_code"], language="python")
+
         # Display JSON summary
         st.markdown("### Detailed Results")
         st.json(result)
-
-        # Example Code Snippet
-        if "test_case" in test_case.lower():
-            st.markdown("### Example Code Snippet")
-            st.code("""
-def example_function():
-    print("This is an example")
-""", language="python")
 
 st.sidebar.title("Navigation")
 st.sidebar.markdown("Use the main view to explore results in detail.")
