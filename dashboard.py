@@ -93,7 +93,7 @@ data = {
 }
 
 # Streamlit Dashboard
-st.title("Code Similarity Analysis Dashboard")
+st.title("Code Analysis Dashboard")
 
 # Display results
 for test in data["results"]:
