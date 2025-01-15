@@ -93,29 +93,52 @@ data = {
 }
 
 # Streamlit Dashboard
-st.title("Code Analysis Dashboard")
+st.set_page_config(page_title="Code Analysis Dashboard", layout="wide")
+st.title("🔍 Code Analysis Dashboard")
+st.markdown("""
+    Welcome to the Code Analysis Dashboard! Here you can:
+    - Explore similarity analysis for classes and methods.
+    - Identify redundant code or discover novel additions.
+    - Review complementary class suggestions for better organization.
+""")
 
+# Display results
 # Display results
 for test in data["results"]:
     test_case = test["test_case"]
     result = test["result"]
 
-    st.subheader(test_case)
-    st.json(result)
+    with st.expander(f"🔗 {test_case}", expanded=True):
+        st.subheader(f"Analysis for {test_case}")
 
-    if result.get("redundant_code"):
-        st.markdown(f"**Redundant:** ✅")
-    else:
-        st.markdown(f"**Redundant:** ❌")
+        # Display redundant status
+        is_redundant = "✅ Yes" if result.get("redundant_code") else "❌ No"
+        st.markdown(f"**Redundant Code:** {is_redundant}")
 
-    if "most_similar_class" in result and result["most_similar_class"]:
-        st.markdown(f"**Most Similar Class:** {result['most_similar_class']}")
+        # Display most similar class
+        if "most_similar_class" in result and result["most_similar_class"]:
+            st.markdown(f"**Most Similar Class:** `{result['most_similar_class']}`")
 
-    if "complementary_class" in result and result["complementary_class"]:
-        st.markdown(f"**Complementary Class:** {result['complementary_class']}")
+        # Display complementary class
+        if "complementary_class" in result and result["complementary_class"]:
+            st.markdown(f"**Complementary Class:** `{result['complementary_class']}`")
 
-    if "coverage_map" in result:
-        st.markdown("**Coverage Map:**")
-        st.line_chart(result["coverage_map"])
+        # Display best coverage
+        if "best_coverage" in result:
+            st.markdown(f"**Best Coverage Score:** `{result['best_coverage']}`")
 
-    st.markdown("---")
+        # Display JSON summary
+        st.markdown("### Detailed Results")
+        st.json(result)
+
+        # Example Code Snippet
+        if "test_case" in test_case.lower():
+            st.markdown("### Example Code Snippet")
+            st.code("""
+def example_function():
+    print("This is an example")
+""", language="python")
+
+st.sidebar.title("Navigation")
+st.sidebar.markdown("Use the main view to explore results in detail.")
+st.sidebar.info("🔍 Insights powered by similarity analysis tools.")
