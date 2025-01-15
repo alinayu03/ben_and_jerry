@@ -1,23 +1,12 @@
 {
-  "summary": {
-    "total_redundant_pairs": 5,
-    "average_similarity": 85.4,
-    "most_redundant_file": "src/utils/helpers.js"
-  },
-  "redundancies": [
+  "redundancies": [],
+  "new_methods": [],
+  "new_classes": [
     {
-      "file_a": "src/utils/helpers.js",
-      "file_b": "src/legacy/utils.js",
-      "similarity": 95.2,
-      "code_a": "def calculate_average(arr): return sum(arr) / len(arr)",
-      "code_b": "def find_mean(values): return sum(values) / len(values)"
-    },
-    {
-      "file_a": "src/auth/AuthManager.py",
-      "file_b": "src/legacy/AuthHelper.py",
-      "similarity": 88.7,
-      "code_a": "class AuthManager: def authenticate(user): return user.is_valid()",
-      "code_b": "class AuthHelper: def check_credentials(user): return user.is_valid()"
+      "class_code": "\n    class WaveCatAnimator(BaseAnimator):\n        def __init__(self, frame_manager, delay=0.4, repeat=1, clear_screen=True, wave_amplitude=5):\n            super().__init__(frame_manager, delay, repeat, clear_screen)\n            self.wave_amplitude = wave_amplitude\n    \n        def _wave_shift(self, text, frame_idx):\n            shift_amount = int(self.wave_amplitude * math.sin(frame_idx / len(self.frame_manager) * 2 * math.pi))\n            return \"\\n\".join(\" \" * shift_amount + line for line in text.split(\"\\n\"))\n    \n        def animate(self):\n            if not self.frame_manager:\n                return\n            for cycle in range(self.repeat):\n                for idx, frame in enumerate(self.frame_manager.get_frames()):\n                    self._clear_console()\n                    print(Fore.YELLOW + f\"Wave Cycle {cycle+1}/{self.repeat}\")\n                    print(Fore.CYAN + f\"Frame {idx+1}/{len(self.frame_manager)}\\n\")\n                    print(Fore.GREEN + self._wave_shift(str(frame), idx))\n                    time.sleep(self.delay)\n        ",
+      "similarity": 0.0
     }
-  ]
+  ],
+  "coverage_info": {},
+  "highest_similarity": 0.0
 }

@@ -1,34 +1,121 @@
 import streamlit as st
-import pandas as pd
 import json
 
-# Load JSON data
-with open("analysis_results.json", "r") as file:
-    raw_data = json.load(file)
+# JSON data
+data = {
+    "results": [
+        {
+            "test_case": "Redundant Class 1 (RotatingCatAnimator)",
+            "result": {
+                "redundant_code": True,
+                "coverage_map": [0.9595],
+                "best_coverage": 0.9595,
+                "most_similar_class": "SpinningCatAnimator",
+                "class_similarity_score": 0.9595
+            }
+        },
+        {
+            "test_case": "Redundant Class 2 (MirroredSpinningCatAnimator)",
+            "result": {
+                "redundant_code": True,
+                "coverage_map": [0.9601],
+                "best_coverage": 0.9601,
+                "most_similar_class": "SpinningCatAnimator",
+                "class_similarity_score": 0.9601
+            }
+        },
+        {
+            "test_case": "Novel Class 1 (RainbowCatAnimator)",
+            "result": {
+                "redundant_code": False,
+                "coverage_map": [0.8084, 0.5272, 0.4831, 0.8643],
+                "best_coverage": 0.8643,
+                "most_similar_class": "ShakySpinningCatAnimator",
+                "class_similarity_score": 0.612
+            }
+        },
+        {
+            "test_case": "Novel Class 2 (ShadowCatAnimator)",
+            "result": {
+                "redundant_code": False,
+                "coverage_map": [0.7648, 0.4189, 0.4662, 0.8968],
+                "best_coverage": 0.8968,
+                "most_similar_class": "ShakySpinningCatAnimator",
+                "class_similarity_score": 0.5742
+            }
+        },
+        {
+            "test_case": "Redundant Method 1 (_shake_lines)",
+            "result": {
+                "redundant_code": True,
+                "highest_similarity": 0.98,
+                "most_similar_method": "def _shake_lines",
+                "complementary_class": None
+            }
+        },
+        {
+            "test_case": "Redundant Method 2 (_flip_text)",
+            "result": {
+                "redundant_code": True,
+                "highest_similarity": 0.9859,
+                "most_similar_method": "def _flip_text",
+                "complementary_class": None
+            }
+        },
+        {
+            "test_case": "Novel Method 1 (_invert_colors)",
+            "result": {
+                "redundant_code": False,
+                "highest_similarity": 0.6539,
+                "most_similar_method": "def _flip_text",
+                "complementary_class": None
+            }
+        },
+        {
+            "test_case": "Novel Method 2 (_fade_out_effect)",
+            "result": {
+                "redundant_code": False,
+                "highest_similarity": 0.5534,
+                "most_similar_method": "def _shake_lines",
+                "complementary_class": None
+            }
+        },
+        {
+            "test_case": "Novel Method 3",
+            "result": {
+                "redundant_code": False,
+                "highest_similarity": 0.5303,
+                "most_similar_method": "def _shake_lines",
+                "complementary_class": "ShakySpinningCatAnimator"
+            }
+        }
+    ]
+}
 
-# Extract redundancies into a DataFrame
-data = pd.DataFrame(raw_data["redundancies"])
+# Streamlit Dashboard
+st.title("Code Similarity Analysis Dashboard")
 
-# Sidebar inputs
-repo_url = st.sidebar.text_input("GitHub Repo URL")
-similarity_threshold = st.sidebar.slider("Similarity Threshold", 0, 100, 80)
+# Display results
+for test in data["results"]:
+    test_case = test["test_case"]
+    result = test["result"]
 
-# Main page
-st.title("Redundancy Detection Dashboard")
+    st.subheader(test_case)
+    st.json(result)
 
-# Summary stats
-st.metric("Total Redundant Pairs", len(data))
-avg_similarity = data["similarity"].mean()
-st.metric("Average Similarity Score", f"{avg_similarity:.2f}%")
+    if result.get("redundant_code"):
+        st.markdown(f"**Redundant:** ✅")
+    else:
+        st.markdown(f"**Redundant:** ❌")
 
-# Filtered table
-filtered_data = data[data["similarity"] >= similarity_threshold]
-st.dataframe(filtered_data)
+    if "most_similar_class" in result and result["most_similar_class"]:
+        st.markdown(f"**Most Similar Class:** {result['most_similar_class']}")
 
-# Code comparison
-st.subheader("Detailed Comparison")
-for index, row in filtered_data.iterrows():
-    st.text(f"File A: {row['file_a']}")
-    st.text(f"File B: {row['file_b']}")
-    st.code(row["code_a"], language="python")
-    st.code(row["code_b"], language="python")
+    if "complementary_class" in result and result["complementary_class"]:
+        st.markdown(f"**Complementary Class:** {result['complementary_class']}")
+
+    if "coverage_map" in result:
+        st.markdown("**Coverage Map:**")
+        st.line_chart(result["coverage_map"])
+
+    st.markdown("---")
